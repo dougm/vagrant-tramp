@@ -1,0 +1,57 @@
+#!/bin/bash
+
+if [ "$(uname -s)" == "Darwin" ]
+then
+  type="fusion"
+  PATH="/Applications/VMware Fusion.app/Contents/Library:$PATH"
+else
+  type="ws"
+fi
+
+function vm_dir() {
+  dir=$(dirname $1)
+
+  while [ "$dir" != "" ]
+  do
+    if [ -e "$dir/Vagrantfile" ]
+    then
+      echo $dir
+      break
+    fi
+    dir=$(dirname $dir)
+  done
+}
+
+function vm_list() {
+  dir=$1
+
+  basename $dir
+}
+
+function vm_ssh() {
+  dir=$1
+
+  if [ "$vm_name" == $(basename $dir) ]
+  then
+    cd $dir
+    exec "vagrant" "ssh"
+  fi
+}
+
+if [ "$1" == "" ]
+then
+  vm_func=vm_list
+else
+  vm_func=vm_ssh
+  vm_name=$1
+fi
+
+for vmx in $(vmrun -T $type list | grep -v ^Total)
+do
+  dir=$(vm_dir $vmx)
+
+  if [ "$dir" != "" ]
+  then
+    $vm_func $dir
+  fi
+done
