@@ -7,10 +7,8 @@
 (defconst vagrant-tramp-method "vagrant"
   "TRAMP method for vagrant boxes.")
 
-(defcustom vagrant-tramp-ssh
-  (or (executable-find "vagrant-tramp-ssh")
-      (concat (file-name-directory (locate-library "vagrant-tramp"))
-              "vagrant-tramp-ssh"))
+;;;###autoload
+(defcustom vagrant-tramp-ssh (executable-find "vagrant-tramp-ssh")
   "The vagrant-tramp-ssh executable"
   :group 'tramp
   :type 'file)
@@ -20,6 +18,7 @@
   :group 'tramp)
 
 (defun vagrant-tramp-parse (cmd)
+  "Parse vagrant-tramp-ssh list for vagrant tramp completion"
   (with-temp-buffer
     (shell-command cmd t)
     (mapcar (lambda (name)

@@ -12,10 +12,11 @@ method simply provides auto-completion for Vagrant boxes and a wrapper around
 
 ### Manual
 
-Add this directory to your `load-path` and require, for exampe:
+Add this directory to your `load-path`, `exec-path` and require, for example:
 
 ```lisp
 (add-to-list 'load-path "~/vagrant-tramp")
+(add-to-list 'exec-path "~/vagrant-tramp")
 (eval-after-load 'tramp
   '(progn
      (require 'vagrant-tramp)))
@@ -32,10 +33,10 @@ running Vagrant boxes used in the auto-complete function:
 
 <kbd>C-x C-f /vagrant:</kbd>
 
-   Find file: /vagrant:
-   -> devbox:
-      esxbox:
-      wsbox:
+    Find file: /vagrant:
+    -> devbox:
+       esxbox:
+       wsbox:
 
 When TRAMP opens a connection via `vagrant-tramp-ssh`, the script just cd's into
 the `Vagrantfile` directory and execs `vagrant ssh`.
