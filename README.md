@@ -36,10 +36,14 @@ running Vagrant boxes used in the auto-complete function:
     Find file: /vagrant:
     -> devbox:
        esxbox:
-       wsbox:
+       kafka-broker1:
+       kafka-broker2:
+       kafka-zookeeper:
 
+Boxes are named using the `Vagrantfile` directory basename and the VM name
+(excluding *default*) to support multi-VM environments.
 When TRAMP opens a connection via `vagrant-tramp-ssh`, the script just cd's into
-the `Vagrantfile` directory and execs `vagrant ssh`.
+the `Vagrantfile` directory and execs `vagrant ssh $box_name`.
 
 ## Known issues
 

@@ -22,19 +22,38 @@ function vm_dir() {
   done
 }
 
-function vm_list() {
-  dir=$1
+function vm_name() {
+  path=$1
+  # extract $name from: /.../.vagrant/machines/$name/provider/uuid/box.vmx
+  for _ in {1..3}
+  do
+    path=$(dirname $path)
+  done
+  basename $path
+}
 
-  basename $dir
+function vm_list() {
+  dir=$(basename $1)
+  name=$2
+
+  if [ "$name" == "default" ]
+  then
+    echo $dir
+  else
+    echo "$dir-$name"
+  fi
 }
 
 function vm_ssh() {
   dir=$1
+  name=$2
+  box_name=$(basename $dir)
 
-  if [ "$vm_name" == $(basename $dir) ]
+  if [[ "$vm_name" == "$box_name-$name" ]] ||
+     [[ "$vm_name" == "$box_name" && "$name" == "default" ]]
   then
     cd $dir
-    exec "vagrant" "ssh"
+    exec "vagrant" "ssh" "$name"
   fi
 }
 
@@ -52,6 +71,6 @@ do
 
   if [ "$dir" != "" ]
   then
-    $vm_func $dir
+    $vm_func $dir $(vm_name $vmx)
   fi
 done
