@@ -45,7 +45,24 @@ Boxes are named using the `Vagrantfile` directory basename and the VM name
 When TRAMP opens a connection via `vagrant-tramp-ssh`, the script just cd's into
 the `Vagrantfile` directory and execs `vagrant ssh $box_name`.
 
+### vagrant-tramp-term
+
+The `vagrant-tramp-term` function uses `vagrant-tramp-ssh` to provide a list of
+completions, selection upon which will `vagrant ssh` to the given box using an
+ansi-term.
+
+<kbd>M-x vagrant-tramp-term</kbd>
+
+    vagrant ssh to box:
+    -> devbox:
+       kafka-broker1:
+       kafka-broker2:
+
 ## Known issues
 
 The `vagrant-tramp-ssh` script only works with VMware Fusion and Workstation.
 It also assumes the basename of the directory containing `Vagrantfile` is unique.
+
+## See also
+
+* [vagrant-el](https://github.com/ottbot/vagrant.el)

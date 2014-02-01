@@ -37,7 +37,7 @@
 (defun vagrant-tramp-term (box)
   "ssh to a Vagrant box in an ansi-term"
   (interactive
-   (list (ido-completing-read "Vagrant box: "
+   (list (ido-completing-read "vagrant ssh to box: "
                               (vagrant-tramp-list))))
 
   (let ((name (concat "vagrant ssh " box))
