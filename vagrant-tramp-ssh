@@ -11,7 +11,7 @@ fi
 function vm_dir() {
   dir=$(dirname $1)
 
-  while [ "$dir" != "" ]
+  while [ "$dir" != "/" ]
   do
     if [ -e "$dir/Vagrantfile" ]
     then
