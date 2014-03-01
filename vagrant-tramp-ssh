@@ -9,7 +9,7 @@ else
 fi
 
 function vm_dir() {
-  dir=$(dirname $1)
+  dir=$(dirname $(dirname $1))
 
   while [ "$dir" != "/" ]
   do
