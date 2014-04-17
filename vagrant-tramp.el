@@ -37,8 +37,11 @@
 (defun vagrant-tramp-term (box)
   "ssh to a Vagrant box in an ansi-term"
   (interactive
-   (list (ido-completing-read "vagrant ssh to box: "
-                              (vagrant-tramp-list))))
+   (list
+    (let ((boxes (vagrant-tramp-list)))
+      (if (eq 1 (length boxes))
+          (car boxes)
+        (ido-completing-read "vagrant ssh to box: " boxes)))))
 
   (let ((name (concat "vagrant ssh " box))
         (cmd vagrant-tramp-ssh))
