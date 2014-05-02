@@ -20,7 +20,9 @@
   "TRAMP method for vagrant boxes.")
 
 ;;;###autoload
-(defcustom vagrant-tramp-ssh (executable-find "vagrant-tramp-ssh")
+(defcustom vagrant-tramp-ssh (executable-find
+                              (concat (file-name-directory (or load-file-name buffer-file-name))
+                                      "bin/vagrant-tramp-ssh"))
   "The vagrant-tramp-ssh executable."
   :group 'tramp
   :type 'file)
