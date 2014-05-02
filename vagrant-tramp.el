@@ -1,5 +1,17 @@
-;;; vagrant-tramp.el --- vagrant method for TRAMP
+;;; vagrant-tramp.el --- Vagrant method for TRAMP
 
+;;; Version: 0.5.0
+;;; Author: Doug MacEachern <dougm@vmware.com>
+;;; URL: https://github.com/dougm/vagrant-tramp
+;;; Keywords: vagrant
+
+;;; Commentary:
+
+;; This package adds a TRAMP method for Vagrant boxes.
+
+;;; Code:
+
+(require 'term)
 (require 'tramp)
 (require 'tramp-sh)
 
@@ -9,7 +21,7 @@
 
 ;;;###autoload
 (defcustom vagrant-tramp-ssh (executable-find "vagrant-tramp-ssh")
-  "The vagrant-tramp-ssh executable"
+  "The vagrant-tramp-ssh executable."
   :group 'tramp
   :type 'file)
 
@@ -18,7 +30,7 @@
   :group 'tramp)
 
 (defun vagrant-tramp-list ()
-  "Parse vagrant-tramp-ssh list"
+  "Parse vagrant-tramp-ssh list."
   (with-temp-buffer
     (shell-command vagrant-tramp-ssh t)
     (split-string (buffer-string) "\n" t)))
@@ -27,15 +39,16 @@
 ;; where the file must exist or the function is not called.
 ;; we ignore the argument here and just use vagrant-tramp-ssh
 ;; in vagrant-tramp-list
-(defun vagrant-tramp-parse (_)
-  "Parse vagrant-tramp-ssh list for vagrant tramp completion"
+(defun vagrant-tramp-parse (file)
+  "Parse vagrant-tramp-ssh list for vagrant tramp completion.
+FILE argument is ignored."
   (mapcar (lambda (name)
             (list nil name))
           (vagrant-tramp-list)))
 
 ;;;###autoload
 (defun vagrant-tramp-term (box)
-  "ssh to a Vagrant box in an ansi-term"
+  "SSH to a Vagrant BOX in an `ansi-term'."
   (interactive
    (list
     (let ((boxes (vagrant-tramp-list)))
