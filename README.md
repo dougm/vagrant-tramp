@@ -10,21 +10,19 @@ method simply provides auto-completion for Vagrant boxes and a wrapper around
 
 ## Installation
 
-### Manual
+If you have a recent Emacs with `package.el`, you can install `vagrant-tramp`
+from [MELPA](http://melpa.milkbox.net/).
 
-Add this directory to your `load-path`, `exec-path` and require, for example:
+Or via [el-get](http://tapoueh.org/emacs/el-get.html)
 
-```lisp
-(add-to-list 'load-path "~/vagrant-tramp")
-(add-to-list 'exec-path "~/vagrant-tramp")
+Or manually add to your emacs `load-path`.
+
+## Configuration
+
+```el
 (eval-after-load 'tramp
-  '(progn
-     (require 'vagrant-tramp)))
+  '(require 'vagrant-tramp))
 ```
-
-### el-get (TODO)
-
-<kbd>M-x el-get-install RET vagrant-tramp</kbd>
 
 ## Usage
 
