@@ -67,16 +67,14 @@ FILE argument is ignored."
       (switch-to-buffer (current-buffer)))))
 
 ;;;###autoload
-(eval-after-load 'tramp
-  '(progn
-     (add-to-list 'tramp-methods
-                  `(,vagrant-tramp-method
-                    (tramp-login-program     ,vagrant-tramp-ssh)
-                    (tramp-login-args        (("%h")))
-                    (tramp-remote-shell      "/bin/sh")
-                    (tramp-remote-shell-args ("-c"))))
-     (tramp-set-completion-function vagrant-tramp-method
-                                    `((vagrant-tramp-parse ,vagrant-tramp-ssh)))))
+(defun vagrant-tramp-enable ()
+  "Add `vagrant-tramp-method' to `tramp-methods'."
+  (add-to-list 'tramp-methods
+               `(,vagrant-tramp-method
+                 (tramp-login-program     ,vagrant-tramp-ssh)
+                 (tramp-login-args        (("%h")))
+                 (tramp-remote-shell      "/bin/sh")
+                 (tramp-remote-shell-args ("-c")))))
 
 (provide 'vagrant-tramp)
 ;;; vagrant-tramp.el ends here

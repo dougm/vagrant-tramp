@@ -21,7 +21,7 @@ Or manually add to your emacs `load-path`.
 
 ```el
 (eval-after-load 'tramp
-  '(require 'vagrant-tramp))
+  '(vagrant-tramp-enable))
 ```
 
 ## Usage
