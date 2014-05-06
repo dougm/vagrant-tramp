@@ -74,7 +74,9 @@ FILE argument is ignored."
                  (tramp-login-program     ,vagrant-tramp-ssh)
                  (tramp-login-args        (("%h")))
                  (tramp-remote-shell      "/bin/sh")
-                 (tramp-remote-shell-args ("-c")))))
+                 (tramp-remote-shell-args ("-c"))))
+  (tramp-set-completion-function vagrant-tramp-method
+                                 `((vagrant-tramp-parse ,vagrant-tramp-ssh))))
 
 (provide 'vagrant-tramp)
 ;;; vagrant-tramp.el ends here
