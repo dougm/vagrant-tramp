@@ -43,6 +43,14 @@ Boxes are named using the `Vagrantfile` directory basename and the VM name
 When TRAMP opens a connection via `vagrant-tramp-ssh`, the script just cd's into
 the `Vagrantfile` directory and execs `vagrant ssh $box_name`.
 
+### Opening a file as root
+
+Use this [trick](http://www.emacswiki.org/emacs/TrampMode#toc10) from
+the Emacs Wiki, where we replaced "ssh" with "vagrant" and where "box"
+is a Vagrant box name:
+
+    C-x C-f /vagrant:box|sudo:box:/path/to/file RET
+
 ### vagrant-tramp-term
 
 The `vagrant-tramp-term` function uses `vagrant-tramp-ssh` to provide a list of
