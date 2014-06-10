@@ -61,6 +61,12 @@ function vm_ssh() {
   dir=$1
   name=$2
   box_name=$(basename $dir)
+  if [[ "$type" == "virtualbox" ]]
+  then
+    # VirtualBox box names are given as "directory_vmname", once in
+    # "directory" we want to invoke "vagrant ssh" with "vmname"
+    name=$(echo $name | cut -d'_' -f2)
+  fi
 
   if [[ "$vm_name" == "$box_name-$name" ]] ||
      [[ "$vm_name" == "$box_name" && "$name" == "default" ]] ||
@@ -84,16 +90,17 @@ then
   # Virtualbox Assumptions
   # * VM Box name in Default Vagrant Format
   #    Ex: (DirContainingVagrantFile_vmname_timestamp)
-  # * That the Vagrantfile directory is in your $HOME dir
-  for vm_running in $(VBoxManage list runningvms | awk -F'{|}' '{print $1}')
+  # * That a shared folder is setup for the directory containing the
+  #   VM's Vagrantfile
+  for vm_running in $(VBoxManage list runningvms | sed 's/^"\([^"]*\).*/\1/')
   do
-    dir="$HOME/"
-    dir+=$(echo $vm_running | cut -d'_' -f1 | sed 's/"//')
+    dir="$(VBoxManage showvminfo $vm_running --machinereadable | grep SharedFolderPathMachineMapping1 | sed 's/[^=]*\="\([^"]*\).*/\1/')"
     if [ -n "$vm_name" ]
     then
         name=$vm_name
     else
-        name=$(echo $vm_running | cut -d'_' -f2)
+        # We report names as "directory_vmname"
+        name=$(echo $vm_running | cut -d'_' -f1,2)
     fi
     if [ "$dir" != "" ] && [ "$name" != "" ]
     then
