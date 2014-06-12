@@ -64,10 +64,15 @@ ansi-term.
        kafka-broker1:
        kafka-broker2:
 
-## Known issues
+## Supported Vagrant providers
 
-The `vagrant-tramp-ssh` script only works with VMware Fusion and Workstation.
-It also assumes the basename of the directory containing `Vagrantfile` is unique.
+The `vagrant-tramp-ssh` script works with the following Vagrant providers:
+
+* VMware Fusion
+
+* VMware Workstation
+
+* VirtualBox
 
 ## See also
 
