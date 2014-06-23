@@ -34,7 +34,7 @@
 (defun vagrant-tramp-list ()
   "Parse vagrant-tramp-ssh list."
   (with-temp-buffer
-    (shell-command vagrant-tramp-ssh t)
+    (shell-command (shell-quote-argument vagrant-tramp-ssh) t)
     (split-string (buffer-string) "\n" t)))
 
 ;; tramp completion functions take a file path argument
@@ -71,7 +71,7 @@ FILE argument is ignored."
   "Add `vagrant-tramp-method' to `tramp-methods'."
   (add-to-list 'tramp-methods
                `(,vagrant-tramp-method
-                 (tramp-login-program     ,vagrant-tramp-ssh)
+                 (tramp-login-program     ,(shell-quote-argument vagrant-tramp-ssh))
                  (tramp-login-args        (("%h")))
                  (tramp-remote-shell      "/bin/sh")
                  (tramp-remote-shell-args ("-c"))))
