@@ -13,7 +13,12 @@ then
     type="Unknown"
   fi
 else
-  type="ws"
+    # If VBoxManage exists on the PATH, assume virtualbox
+    if hash VBoxManage 2>/dev/null; then
+        type="virtualbox"
+    else
+        type="ws"
+    fi
 fi
 
 function vm_dir() {
