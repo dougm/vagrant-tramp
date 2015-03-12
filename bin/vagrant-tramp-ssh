@@ -87,7 +87,7 @@ then
   vm_func=vm_list
 else
   vm_func=vm_ssh
-  vm_name=$1
+  target_vm_name=$1
 fi
 
 if [ "$type" == "virtualbox" ]
@@ -99,18 +99,40 @@ then
   #   VM's Vagrantfile
   for vm_running in $(VBoxManage list runningvms | sed 's/^"\([^"]*\).*/\1/')
   do
-    dir="$(VBoxManage showvminfo $vm_running --machinereadable | grep SharedFolderPathMachineMapping1 | sed 's/[^=]*\="\([^"]*\).*/\1/')"
-    if [ -n "$vm_name" ]
+    # We report names as "directory_vmname"
+    vm_name=$(echo $vm_running | cut -d'_' -f1,2)
+    # If target_vm_name is set, we are looking for a certain vm.
+    if [ -n "$target_vm_name" ] && [ "$vm_name" != "$target_vm_name" ]
     then
-        name=$vm_name
-    else
-        # We report names as "directory_vmname"
-        name=$(echo $vm_running | cut -d'_' -f1,2)
+      continue
     fi
-    if [ "$dir" != "" ] && [ "$name" != "" ]
-    then
-      $vm_func $dir $name
-    fi
+    vm_basedir=$(echo $vm_name | cut -d'_' -f1)
+
+    # If the user has not explicitly synced the directory containing the
+    # Vagrantfile, Vagrant will append it as the final shared folder.
+    #
+    # Otherwise, we can make no assumptions about the order.
+    #
+    # Look at all shared folders and try and determine which directory
+    # contains the Vagrantfile for the requested instance based on the parent
+    # directory name.
+    #
+    # This strategy will fail if all the shared folders have similar leaf
+    # names (containing a Vagrantfile).
+    #
+    # Perhaps we could do a better job with parsable vagrant global-status output:
+    # https://github.com/mitchellh/vagrant/issues/4097
+    for dir in $(VBoxManage showvminfo $vm_running --machinereadable | grep SharedFolderPathMachineMapping | sed 's/[^=]*\="\([^"]*\).*/\1/')
+    do
+      if [ -e "$dir/Vagrantfile" ]
+      then
+        basedir=$(basename "$dir")
+        if [ "$basedir" == "$vm_basedir" ]
+        then
+          $vm_func $dir $vm_name
+        fi
+      fi
+    done
   done
 else
   # VMware Fusion
