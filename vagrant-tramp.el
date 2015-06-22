@@ -14,10 +14,16 @@
 (require 'term)
 (require 'tramp)
 (require 'tramp-sh)
+(require 'cl)
+(require 'subr-x)
 
 ;;;###autoload
 (defconst vagrant-tramp-method "vagrant"
   "TRAMP method for vagrant boxes.")
+
+;;;###autoload
+(defconst vagrant-tramp-separator "|||"
+  "Separates box id and name")
 
 ;;;###autoload
 (defcustom vagrant-tramp-ssh (executable-find
@@ -31,21 +37,27 @@
   "Vagrant TRAMP method."
   :group 'tramp)
 
+(defun vagrant-tramp-parse-id-and-name (line-from-global-status)
+  (string-join (subseq (remove-if 's-blank? (split-string line-from-global-status " ")) 0 2) vagrant-tramp-separator))
+
 (defun vagrant-tramp-list ()
   "Parse vagrant-tramp-ssh list."
   (with-temp-buffer
-    (shell-command (shell-quote-argument vagrant-tramp-ssh) t)
-    (split-string (buffer-string) "\n" t)))
+    (shell-command "vagrant global-status" t)
+    (let* ((vm-list (mapcar 'vagrant-tramp-parse-id-and-name
+                            (subseq (split-string (buffer-string) "\n" t) 2)))
+           (first-empty-line-idx (-elem-index vagrant-tramp-separator vm-list)))
+      (subseq vm-list 0 first-empty-line-idx))))
 
 ;; tramp completion functions take a file path argument
 ;; where the file must exist or the function is not called.
 ;; we ignore the argument here and just use vagrant-tramp-ssh
 ;; in vagrant-tramp-list
 (defun vagrant-tramp-parse (file)
-  "Parse vagrant-tramp-ssh list for vagrant tramp completion.
+  "Parse vagrant-tramp-list for vagrant tramp completion.
 FILE argument is ignored."
-  (mapcar (lambda (name)
-            (list nil name))
+  (mapcar (lambda (id-and-name)
+            (list nil (first (split-string id-and-name vagrant-tramp-separator))))
           (vagrant-tramp-list)))
 
 ;;;###autoload
@@ -53,10 +65,14 @@ FILE argument is ignored."
   "SSH to a Vagrant BOX in an `ansi-term'."
   (interactive
    (list
-    (let ((boxes (vagrant-tramp-list)))
-      (if (eq 1 (length boxes))
-          (car boxes)
-        (ido-completing-read "vagrant ssh to box: " boxes)))))
+    (first
+     (split-string
+      (let ((boxes (vagrant-tramp-list)))
+        (if (eq 1 (length boxes))
+            (car boxes)
+          (ido-completing-read "vagrant ssh to box: " boxes)))
+      vagrant-tramp-separator
+      ))))
 
   (let ((name (concat "vagrant ssh " box))
         (cmd vagrant-tramp-ssh))
