@@ -17,13 +17,6 @@ Or via [el-get](http://tapoueh.org/emacs/el-get.html)
 
 Or manually add to your emacs `load-path`.
 
-## Configuration
-
-```el
-(eval-after-load 'tramp
-  '(vagrant-tramp-enable))
-```
-
 ## Usage
 
 The TRAMP method `vagrant` runs the `vagrant-tramp-ssh` script to get a list of
@@ -53,9 +46,8 @@ is a Vagrant box name:
 
 ### vagrant-tramp-term
 
-The `vagrant-tramp-term` function uses `vagrant-tramp-ssh` to provide a list of
-completions, selection upon which will `vagrant ssh` to the given box using an
-ansi-term.
+The `vagrant-tramp-term` function provides a convenient way to
+`vagrant ssh` into a box using an ansi-term.
 
 <kbd>M-x vagrant-tramp-term</kbd>
 
@@ -63,16 +55,6 @@ ansi-term.
     -> devbox:
        kafka-broker1:
        kafka-broker2:
-
-## Supported Vagrant providers
-
-The `vagrant-tramp-ssh` script works with the following Vagrant providers:
-
-* VMware Fusion
-
-* VMware Workstation
-
-* VirtualBox
 
 ## See also
 
