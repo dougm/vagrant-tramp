@@ -6,9 +6,9 @@
 [TRAMP](http://www.gnu.org/software/tramp/) method for
 [Vagrant](http://vagrantup.com/) boxes.  As far as Vagrant is
 concerned, the TRAMP `vagrant` method behaves like the built-in
-`vagrant ssh` command does.  The `vagrant` method simply provides
-auto-completion for Vagrant boxes and a wrapper around `vagrant ssh`
-for connecting to boxes.
+`vagrant ssh` command does.  The `vagrant-tramp` method simply
+provides auto-completion and a wrapper around `vagrant ssh` for
+connecting to boxes.
 
 ## Installation
 
@@ -17,12 +17,12 @@ If you have a recent Emacs with `package.el`, you can install
 
 Or via [el-get](http://tapoueh.org/emacs/el-get.html)
 
-Or manually add to your emacs `load-path`.
+Otherwise add it to your emacs `load-path`.
 
 ## Usage
 
-The TRAMP method `vagrant` runs the `vagrant-tramp-ssh` script to get
-a list of running Vagrant boxes used in the auto-complete function:
+The TRAMP method `vagrant` uses `vagrant global-status` to get a list
+of running Vagrant boxes for completion:
 
 <kbd>C-x C-f /vagrant:</kbd>
 
@@ -34,9 +34,9 @@ a list of running Vagrant boxes used in the auto-complete function:
        kafka-zookeeper:
 
 Boxes are named using the `Vagrantfile` directory basename and the VM
-name (excluding *default*) to support multi-VM environments.  When
-TRAMP opens a connection via `vagrant-tramp-ssh`, the script just cd's
-into the `Vagrantfile` directory and execs `vagrant ssh $box_name`.
+name (excluding *default*) to support multi-VM environments. TRAMP
+opens a connection by `cd`-ing into the `Vagrantfile` directory and
+running `vagrant ssh $box_id`.
 
 ### Opening a file as root
 
