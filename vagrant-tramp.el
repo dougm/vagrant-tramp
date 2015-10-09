@@ -53,9 +53,10 @@
   (string= (cdr (assoc 'state box)) "running"))
 
 (defun vagrant-tramp--box-name (box)
-  (concat (file-name-base (cdr (assoc 'dir box)))
-          "_"
-          (cdr (assoc 'name box))))
+  (let ((name (cdr (assoc 'name box))))
+    (concat (file-name-base (cdr (assoc 'dir box)))
+            (unless (string= name "default")
+              (concat "_" (cdr (assoc 'name box)))))))
 
 (defun vagrant-tramp--running-boxes ()
   "List of strings for running boxes as reported by global-status."

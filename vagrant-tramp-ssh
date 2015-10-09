@@ -2,6 +2,7 @@
 read dir_name name <<<\
      $(echo $1 \
               | awk -F_ '{ print $1; print $2 }')
+if [[ ! $name ]]; then name="default"; fi
 
 read id dir <<<\
      $(vagrant global-status \
