@@ -2,16 +2,18 @@
 
 ## Synopsis
 
-`vagrant-tramp` adds an Emacs [TRAMP](http://www.gnu.org/software/tramp/) method for
-[Vagrant](http://vagrantup.com/) boxes.  As far as TRAMP is concerned, the
-`vagrant` method behaves just as the built-in `ssh` method does.  The `vagrant`
-method simply provides auto-completion for Vagrant boxes and a wrapper around
-`vagrant ssh` for connecting to boxes.
+`vagrant-tramp` adds an Emacs
+[TRAMP](http://www.gnu.org/software/tramp/) method for
+[Vagrant](http://vagrantup.com/) boxes.  As far as Vagrant is
+concerned, the TRAMP `vagrant` method behaves like the built-in
+`vagrant ssh` command does.  The `vagrant` method simply provides
+auto-completion for Vagrant boxes and a wrapper around `vagrant ssh`
+for connecting to boxes.
 
 ## Installation
 
-If you have a recent Emacs with `package.el`, you can install `vagrant-tramp`
-from [MELPA](http://melpa.milkbox.net/).
+If you have a recent Emacs with `package.el`, you can install
+`vagrant-tramp` from [MELPA](http://melpa.milkbox.net/).
 
 Or via [el-get](http://tapoueh.org/emacs/el-get.html)
 
@@ -19,8 +21,8 @@ Or manually add to your emacs `load-path`.
 
 ## Usage
 
-The TRAMP method `vagrant` runs the `vagrant-tramp-ssh` script to get a list of
-running Vagrant boxes used in the auto-complete function:
+The TRAMP method `vagrant` runs the `vagrant-tramp-ssh` script to get
+a list of running Vagrant boxes used in the auto-complete function:
 
 <kbd>C-x C-f /vagrant:</kbd>
 
@@ -31,10 +33,10 @@ running Vagrant boxes used in the auto-complete function:
        kafka-broker2:
        kafka-zookeeper:
 
-Boxes are named using the `Vagrantfile` directory basename and the VM name
-(excluding *default*) to support multi-VM environments.
-When TRAMP opens a connection via `vagrant-tramp-ssh`, the script just cd's into
-the `Vagrantfile` directory and execs `vagrant ssh $box_name`.
+Boxes are named using the `Vagrantfile` directory basename and the VM
+name (excluding *default*) to support multi-VM environments.  When
+TRAMP opens a connection via `vagrant-tramp-ssh`, the script just cd's
+into the `Vagrantfile` directory and execs `vagrant ssh $box_name`.
 
 ### Opening a file as root
 
