@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+read dir_name name <<<\
+     $(echo $1 \
+              | awk -F_ '{ print $1; print $2 }')
+
+read id dir <<<\
+     $(vagrant global-status \
+              | awk -v name=$name \
+                    -v dir=$dir_name \
+                    "\$2=name && \$5~dir { print \$1; print \$5 }")
+cd "$dir"
+vagrant ssh $id
