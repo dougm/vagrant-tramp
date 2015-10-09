@@ -27,13 +27,13 @@
   "Method to connect to vagrant boxes.")
 
 ;;;###autoload
-(defconst vagrant-ssh
+(defconst vagrant-tramp-ssh
   (executable-find
    (concat
     (file-name-directory
      (or load-file-name
          buffer-file-name))
-    "vagrant-ssh")))
+    "vagrant-tramp-ssh")))
 
 (defun vagrant-tramp--all-boxes ()
   "List of VMs per `vagrant global-status` as alists."
@@ -56,21 +56,21 @@
   (let ((name (cdr (assoc 'name box))))
     (concat (file-name-base (cdr (assoc 'dir box)))
             (unless (string= name "default")
-              (concat "_" (cdr (assoc 'name box)))))))
+              (concat "_" name)))))
 
 (defun vagrant-tramp--running-boxes ()
   "List of strings for running boxes as reported by global-status."
   (-filter 'vagrant-tramp--box-running-p
            (vagrant-tramp--all-boxes)))
 
-;; tramp completion functions take a file path argument
-;; where the file must exist or the function is not called.
-;; we ignore the argument here and just use vagrant-tramp-ssh
-;; in vagrant-tramp-list
-(defun vagrant-tramp-completions (file)
+;; tramp completion functions take a file path argument where the file
+;; must exist or the function is not called.  we ignore the argument
+;; here and just use vagrant-tramp-ssh in vagrant-tramp-list
+(defun vagrant-tramp--completions (file)
   "List for vagrant tramp completion. FILE argument is ignored."
   (--map (list nil it)
-         (-map 'vagrant-tramp--box-name (vagrant-tramp--running-boxes))))
+         (-map 'vagrant-tramp--box-name
+               (vagrant-tramp--running-boxes))))
 
 ;;;###autoload
 (defun vagrant-tramp-term (box-name)
@@ -105,14 +105,14 @@
   "Add `vagrant-tramp-method' to `tramp-methods'."
   (add-to-list 'tramp-methods
                `(,vagrant-tramp-method
-                 (tramp-login-program     ,vagrant-ssh)
+                 (tramp-login-program     ,vagrant-tramp-ssh)
                  (tramp-login-args        (("%h")))
                  (tramp-remote-shell      "/bin/sh")
                  (tramp-remote-shell-args ("-c")))))
 
 ;;;###autoload
 (defconst vagrant-tramp-completion-function-alist
-  '((vagrant-tramp-completions  ""))
+  '((vagrant-tramp--completions  ""))
   "Default list of (FUNCTION FILE) pairs to complete vagrant method.")
 
 ;;;###autoload
