@@ -22,11 +22,9 @@
   :group 'tramp
   :link '(url-link :tag "Github" "https://github.com/dougm/vagrant-tramp"))
 
-;;;###autoload
 (defconst vagrant-tramp-method "vagrant"
   "Method to connect to vagrant boxes.")
 
-;;;###autoload
 (defconst vagrant-tramp-ssh
   (executable-find
    (concat
@@ -112,7 +110,6 @@ not reported to be running."
                  (tramp-remote-shell      "/bin/sh")
                  (tramp-remote-shell-args ("-c")))))
 
-;;;###autoload
 (defconst vagrant-tramp-completion-function-alist
   '((vagrant-tramp--completions  ""))
   "Default list of (FUNCTION FILE) pairs to complete vagrant method.")
