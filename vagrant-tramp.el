@@ -1,9 +1,9 @@
 ;;; vagrant-tramp.el --- Vagrant method for TRAMP
 
-;;; Version: 0.5.0
-;;; Author: Doug MacEachern <dougm@vmware.com>
-;;; URL: https://github.com/dougm/vagrant-tramp
-;;; Keywords: vagrant
+;; Version: 0.5.0
+;; Author: Doug MacEachern <dougm@vmware.com>
+;; URL: https://github.com/dougm/vagrant-tramp
+;; Keywords: vagrant
 ;; Package-Requires: ((dash "2.12.0"))
 
 ;;; Commentary:
