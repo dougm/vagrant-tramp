@@ -26,12 +26,11 @@
   "Method to connect to vagrant boxes.")
 
 (defconst vagrant-tramp-ssh
-  (executable-find
-   (concat
-    (file-name-directory
-     (or load-file-name
-         buffer-file-name))
-    "vagrant-tramp-ssh"))
+  (shell-quote-argument
+   (executable-find (concat (file-name-directory
+                             (or load-file-name
+                                 buffer-file-name))
+                            "vagrant-tramp-ssh")))
   "TRAMP login helper script")
 
 (defun vagrant-tramp--all-boxes ()
