@@ -67,6 +67,7 @@ not reported to be running."
   (-filter 'vagrant-tramp--box-running-p
            (vagrant-tramp--all-boxes)))
 
+;;;###autoload
 (defun vagrant-tramp--completions (&optional file)
   "List for vagrant tramp completion. FILE argument is ignored."
   (--map (list nil it)
