@@ -1,9 +1,36 @@
 ;;; vagrant-tramp.el --- Vagrant method for TRAMP
 
+<<<<<<< HEAD
 ;;; Version: 0.5.0
 ;;; Author: Doug MacEachern <dougm@vmware.com>
 ;;; URL: https://github.com/dougm/vagrant-tramp
 ;;; Keywords: vagrant
+=======
+;; Copyright © 2015  The Vagrant-Tramp Contributors
+
+;; Version: 0.5.0
+;; Author: Doug MacEachern <dougm@vmware.com>
+;;         Ryan Prior      <ryanprior@gmail.com> (rewrite)
+
+;; This file is not part of GNU Emacs.
+
+;; vagrant-tramp is free software: you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation, either version 3 of the
+;; License, or (at your option) any later version.
+
+;; This file is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
+
+;; URL: https://github.com/dougm/vagrant-tramp
+;; Keywords: vagrant
+;; Package-Requires: ((dash "2.12.0"))
+>>>>>>> a5e06b2... Adds copying information
 
 ;;; Commentary:
 
