@@ -30,7 +30,7 @@
    (executable-find (concat (file-name-directory
                              (or load-file-name
                                  buffer-file-name))
-                            "vagrant-tramp-ssh")))
+                            "bin/vagrant-tramp-ssh")))
   "TRAMP login helper script")
 
 (defun vagrant-tramp--all-boxes ()
