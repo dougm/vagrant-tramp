@@ -114,10 +114,11 @@ not reported to be running."
   "Default list of (FUNCTION FILE) pairs to complete vagrant method.")
 
 ;;;###autoload
-(with-eval-after-load "tramp"
-  (vagrant-tramp-add-method)
-  (tramp-set-completion-function
-   vagrant-tramp-method vagrant-tramp-completion-function-alist))
+(eval-after-load 'tramp
+  '(progn
+     (vagrant-tramp-add-method)
+     (tramp-set-completion-function
+      vagrant-tramp-method vagrant-tramp-completion-function-alist)))
 
 
 (provide 'vagrant-tramp)
