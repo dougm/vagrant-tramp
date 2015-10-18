@@ -133,6 +133,9 @@ not reported to be running."
   "Default list of (FUNCTION FILE) pairs to complete vagrant method.")
 
 ;;;###autoload
+(define-obsolete-function-alias 'vagrant-tramp-enable 'vagrant-tramp-add-method)
+
+;;;###autoload
 (eval-after-load 'tramp
   '(progn
      (vagrant-tramp-add-method)
