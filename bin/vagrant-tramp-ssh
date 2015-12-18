@@ -37,6 +37,6 @@ read id dir <<<\
      $(vagrant global-status \
               | awk -v name=$name \
                     -v dir=$dir_name \
-                    "\$2=name && \$5~dir { print \$1; print \$5 }")
+                    "\$2==name && \$5~dir { print \$1; print \$5 }")
 cd "$dir"
 vagrant ssh $id
