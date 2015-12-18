@@ -28,9 +28,10 @@
 ## for more details.
 
 
-read dir_name name <<<\
+read name dir_name <<<\
      $(echo $1 \
-              | awk -F_ '{ print $1; print $2 }')
+              | awk -F_ '{print $NF; NF--; gsub(/ /, "_", $0); print $0}')
+
 if [[ ! $name ]]; then name="default"; fi
 
 read id dir <<<\
