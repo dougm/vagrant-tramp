@@ -4,7 +4,7 @@
 
 `vagrant-tramp` adds an Emacs
 [TRAMP](http://www.gnu.org/software/tramp/) method for
-[Vagrant](http://vagrantup.com/) boxes.  As far as Vagrant is
+[Vagrant](https://www.vagrantup.com/) boxes.  As far as Vagrant is
 concerned, the TRAMP `vagrant` method behaves like the built-in
 `vagrant ssh` command does.  The `vagrant-tramp` method simply
 provides auto-completion and a wrapper around `vagrant ssh` for
@@ -13,7 +13,7 @@ connecting to boxes.
 ## Installation
 
 If you have a recent Emacs with `package.el`, you can install
-`vagrant-tramp` from [MELPA](http://melpa.milkbox.net/).
+`vagrant-tramp` from [MELPA](https://melpa.org/).
 
 Or via [el-get](http://tapoueh.org/emacs/el-get.html)
 
