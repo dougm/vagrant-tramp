@@ -30,7 +30,7 @@
 
 read name dir_name <<<\
      $(echo $1 \
-              | awk -F_ '{print $NF; NF--; gsub(/ /, "_", $0); print $0}')
+              | awk -F_ '{print $NF; NF--; $1 = $1; gsub(/ /, "_", $0); print $0}')
 
 if [[ ! $name ]]; then name="default"; fi
 
