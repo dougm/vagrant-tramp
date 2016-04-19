@@ -27,10 +27,7 @@
 ## establishing a connection to a Vagrant box. See vagrant-tramp.el
 ## for more details.
 
-
-read name dir_name <<<\
-     $(echo $1 \
-              | awk -F_ '{print $NF; NF--; gsub(/ /, "_", $0); print $0}')
+read dir_name name <<< $(echo $1 | sed "s/--/\n/")
 
 if [[ ! $name ]]; then name="default"; fi
 

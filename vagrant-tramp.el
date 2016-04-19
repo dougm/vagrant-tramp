@@ -74,7 +74,7 @@
   (let ((name (cdr (assoc 'name box))))
     (concat (file-name-base (cdr (assoc 'dir box)))
             (unless (string= name "default")
-              (concat "_" name)))))
+              (concat "--" name)))))
 
 (defun vagrant-tramp--running-boxes ()
   "List as per `vagrant-tramp--all-boxes', but excluding boxes not reported to be running."
