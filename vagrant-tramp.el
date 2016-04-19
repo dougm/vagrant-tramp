@@ -50,7 +50,7 @@
                              (or load-file-name
                                  buffer-file-name))
                             "bin/vagrant-tramp-ssh")))
-  "TRAMP login helper script")
+  "TRAMP login helper script.")
 
 (defun vagrant-tramp--all-boxes ()
   "List of VMs per `vagrant global-status` as alists."
@@ -70,29 +70,27 @@
   (string= (cdr (assoc 'state box)) "running"))
 
 (defun vagrant-tramp--box-name (box)
-  "String representing BOX, using the Vagrantfile directory
-basename and the VM name (excluding 'default')."
+  "String representing BOX, using the Vagrantfile directory basename and the VM name (excluding 'default')."
   (let ((name (cdr (assoc 'name box))))
     (concat (file-name-base (cdr (assoc 'dir box)))
             (unless (string= name "default")
               (concat "_" name)))))
 
 (defun vagrant-tramp--running-boxes ()
-  "List as per `vagrant-tramp--all-boxes', but excluding boxes
-not reported to be running."
+  "List as per `vagrant-tramp--all-boxes', but excluding boxes not reported to be running."
   (-filter 'vagrant-tramp--box-running-p
            (vagrant-tramp--all-boxes)))
 
 ;;;###autoload
 (defun vagrant-tramp--completions (&optional file)
-  "List for vagrant tramp completion. FILE argument is ignored."
+  "List for vagrant tramp completion.  FILE argument is ignored."
   (--map (list nil it)
          (-map 'vagrant-tramp--box-name
                (vagrant-tramp--running-boxes))))
 
 ;;;###autoload
 (defun vagrant-tramp-term (box-name)
-  "SSH into BOX using an `ansi-term'."
+  "SSH into BOX-NAME using an `ansi-term'."
   (interactive
    (list
     (let* ((boxes (vagrant-tramp--running-boxes))
