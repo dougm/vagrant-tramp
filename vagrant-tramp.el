@@ -54,16 +54,16 @@
 
 (defun vagrant-tramp--all-boxes ()
   "List of VMs per `vagrant global-status` as alists."
-  (let* ((status-cmd "vagrant global-status")
+  (let* ((status-cmd "vagrant global-status --machine-readable")
          (status-raw (shell-command-to-string status-cmd))
-         (status-raw-lines (split-string status-raw "\n"))
-         (status-raw-vms (--take-while (not (string= it " "))
-                                       (cddr status-raw-lines)))
-         (vm-strings (--map (--remove (string= it "")
-                                      (split-string it " "))
-                            status-raw-vms))
+         (status-lines (-drop 8 (split-string status-raw "\n")))
+         (status-data-raw (--map (mapconcat 'identity
+                                            (-drop 4 (split-string it ",")) ",")
+                                 status-lines))
+         (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
+         (status-groups (-butlast (-split-on "" status-data)))
          (vm-attrs '(id name provider state dir)))
-    (--map (-zip vm-attrs it) vm-strings)))
+    (--map (-zip vm-attrs it) status-groups)))
 
 (defun vagrant-tramp--box-running-p (box)
   "True if BOX is reported as running."
