@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ### vagrant-tramp-ssh --- connect to the named vagrant box
 
-## Copyright © 2015 Vagrant-Tramp Contributors
+## Copyright © 2016  The Vagrant-Tramp Contributors
 
 ## Author: Ryan Prior <ryanprior@gmail.com>
 

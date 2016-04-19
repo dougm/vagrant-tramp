@@ -1,8 +1,8 @@
 ;;; vagrant-tramp.el --- Vagrant method for TRAMP
 
-;; Copyright © 2015  The Vagrant-Tramp Contributors
+;; Copyright © 2016  The Vagrant-Tramp Contributors
 
-;; Version: 0.5.0
+;; Version: 0.6.0
 ;; Author: Doug MacEachern <dougm@vmware.com>
 ;;         Ryan Prior      <ryanprior@gmail.com> (rewrite)
 
