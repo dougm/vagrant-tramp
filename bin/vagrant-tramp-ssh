@@ -27,19 +27,19 @@
 ## establishing a connection to a Vagrant box. See vagrant-tramp.el
 ## for more details.
 
-read dir_name name <<< $(echo $1 | sed 's/--/\
+read dir_name name <<< $(echo "$1" | sed 's/--/\
 /')
 
-if [[ ! $name ]]; then name="default"; fi
+if [[ ! "$name" ]]; then name="default"; fi
 
 read id dir <<<\
      $(vagrant global-status --machine-readable \
            | head -n-2 | tail -n+8 \
            | cut -d, -f5- \
            | awk -v RS="" \
-                 -v name=$name \
-                 -v dir=$dir_name \
+                 -v name="$name" \
+                 -v dir="$dir_name" \
                  "\$2==name && \$5~dir { print \$1; print \$5 }")
 
 cd "$dir"
-vagrant ssh $id
+vagrant ssh "$id"
