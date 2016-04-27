@@ -1,8 +1,8 @@
 ;;; vagrant-tramp.el --- Vagrant method for TRAMP
 
-;; Copyright © 2015  The Vagrant-Tramp Contributors
+;; Copyright © 2016  The Vagrant-Tramp Contributors
 
-;; Version: 0.5.0
+;; Version: 0.6.0
 ;; Author: Doug MacEachern <dougm@vmware.com>
 ;;         Ryan Prior      <ryanprior@gmail.com> (rewrite)
 
@@ -50,49 +50,47 @@
                              (or load-file-name
                                  buffer-file-name))
                             "bin/vagrant-tramp-ssh")))
-  "TRAMP login helper script")
+  "TRAMP login helper script.")
 
 (defun vagrant-tramp--all-boxes ()
   "List of VMs per `vagrant global-status` as alists."
-  (let* ((status-cmd "vagrant global-status")
+  (let* ((status-cmd "vagrant global-status --machine-readable")
          (status-raw (shell-command-to-string status-cmd))
-         (status-raw-lines (split-string status-raw "\n"))
-         (status-raw-vms (--take-while (not (string= it " "))
-                                       (cddr status-raw-lines)))
-         (vm-strings (--map (--remove (string= it "")
-                                      (split-string it " "))
-                            status-raw-vms))
+         (status-lines (-drop 8 (split-string status-raw "\n")))
+         (status-data-raw (--map (mapconcat 'identity
+                                            (-drop 4 (split-string it ",")) ",")
+                                 status-lines))
+         (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
+         (status-groups (-butlast (-split-on "" status-data)))
          (vm-attrs '(id name provider state dir)))
-    (--map (-zip vm-attrs it) vm-strings)))
+    (--map (-zip vm-attrs it) status-groups)))
 
 (defun vagrant-tramp--box-running-p (box)
   "True if BOX is reported as running."
   (string= (cdr (assoc 'state box)) "running"))
 
 (defun vagrant-tramp--box-name (box)
-  "String representing BOX, using the Vagrantfile directory
-basename and the VM name (excluding 'default')."
+  "String representing BOX, using the Vagrantfile directory basename and the VM name (excluding 'default')."
   (let ((name (cdr (assoc 'name box))))
     (concat (file-name-base (cdr (assoc 'dir box)))
             (unless (string= name "default")
-              (concat "_" name)))))
+              (concat "--" name)))))
 
 (defun vagrant-tramp--running-boxes ()
-  "List as per `vagrant-tramp--all-boxes', but excluding boxes
-not reported to be running."
+  "List as per `vagrant-tramp--all-boxes', but excluding boxes not reported to be running."
   (-filter 'vagrant-tramp--box-running-p
            (vagrant-tramp--all-boxes)))
 
 ;;;###autoload
 (defun vagrant-tramp--completions (&optional file)
-  "List for vagrant tramp completion. FILE argument is ignored."
+  "List for vagrant tramp completion.  FILE argument is ignored."
   (--map (list nil it)
          (-map 'vagrant-tramp--box-name
                (vagrant-tramp--running-boxes))))
 
 ;;;###autoload
 (defun vagrant-tramp-term (box-name)
-  "SSH into BOX using an `ansi-term'."
+  "SSH into BOX-NAME using an `ansi-term'."
   (interactive
    (list
     (let* ((boxes (vagrant-tramp--running-boxes))
