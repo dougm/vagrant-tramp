@@ -97,7 +97,7 @@
            (names (-map 'vagrant-tramp--box-name boxes)))
       (if (eq 1 (length names))
           (car names)
-        (ido-completing-read "vagrant ssh to: " names)))))
+        (completing-read "vagrant ssh to: " names)))))
   (let* ((name (concat "vagrant terminal:" box-name))
          (buffer (get-buffer-create (concat "*" name "*"))))
     (unless (term-check-proc buffer)
