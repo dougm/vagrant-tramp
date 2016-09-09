@@ -89,17 +89,21 @@
                (vagrant-tramp--running-boxes))))
 
 ;;;###autoload
-(defun vagrant-tramp-term (box-name)
-  "SSH into BOX-NAME using an `ansi-term'."
+(defun vagrant-tramp-term (box-name &optional use-new-session)
+  "SSH into BOX-NAME using an `ansi-term'. Use prefix argument to open a new ssh session"
   (interactive
    (list
     (let* ((boxes (vagrant-tramp--running-boxes))
            (names (-map 'vagrant-tramp--box-name boxes)))
       (if (eq 1 (length names))
           (car names)
-        (ido-completing-read "vagrant ssh to: " names)))))
+        (ido-completing-read "vagrant ssh to: " names)))
+    current-prefix-arg))
   (let* ((name (concat "vagrant terminal:" box-name))
-         (buffer (get-buffer-create (concat "*" name "*"))))
+         (buf-name (concat "*" name "*"))
+         (buffer (if (eq use-new-session nil)
+                     (get-buffer-create buf-name)
+                   (generate-new-buffer buf-name))))
     (unless (term-check-proc buffer)
       (let* ((boxes (vagrant-tramp--running-boxes))
              (box (--first (string=
@@ -114,7 +118,7 @@
         (set-buffer buffer)
         (term-mode)
         (term-char-mode)))
-    (switch-to-buffer (concat "*" name "*"))))
+    (switch-to-buffer buffer)))
 
 ;;;###autoload
 (defun vagrant-tramp-add-method ()
