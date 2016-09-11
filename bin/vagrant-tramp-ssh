@@ -27,6 +27,18 @@
 ## establishing a connection to a Vagrant box. See vagrant-tramp.el
 ## for more details.
 
+if tac </dev/null 2>/dev/null
+then
+    reverse='tac'
+elif tail -r </dev/null 2>/dev/null
+then
+    reverse='tail -r'
+else
+    echo 'tac not found' >&2
+    echo 'tail -r failed' >&2
+    exit 1
+fi
+
 read dir_name name <<< $(echo "$1" | sed 's/--/\
 /')
 
@@ -35,6 +47,7 @@ if [[ ! "$name" ]]; then name="default"; fi
 read id dir <<<\
      $(vagrant global-status --machine-readable \
            | head -n-2 | tail -n+8 \
+           | $reverse | tail -n +3 | $reverse | tail -n +8 \
            | cut -d, -f5- \
            | awk -v RS="" \
                  -v name="$name" \
