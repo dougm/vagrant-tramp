@@ -38,7 +38,7 @@ read id dir <<<\
            | cut -d, -f5- \
            | awk -v RS="" \
                  -v name="$name" \
-                 -v dir="$dir_name" \
+                 -v dir="/$dir_name$" \
                  "\$2==name && \$5~dir { print \$1; print \$5 }")
 
 cd "$dir"
