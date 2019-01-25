@@ -34,7 +34,8 @@ if [[ ! "$name" ]]; then name="default"; fi
 
 read id dir <<<\
      $(vagrant global-status --machine-readable \
-           | head -n-2 | tail -n+8 \
+           | awk -v n=1 '{if(NR>n) print a[NR%n]; a[NR%n]=$0}' \
+           | tail -n+8 \
            | cut -d, -f5- \
            | awk -v RS="" \
                  -v name="$name" \
