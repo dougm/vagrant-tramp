@@ -56,7 +56,7 @@
   "List of VMs per `vagrant global-status` as alists."
   (let* ((status-cmd "vagrant global-status --machine-readable")
          (status-raw (shell-command-to-string status-cmd))
-         (status-lines (-drop 8 (split-string status-raw "\n")))
+         (status-lines (-drop 7 (split-string status-raw "\n")))
          (status-data-raw (--map (mapconcat 'identity
                                             (-drop 4 (split-string it ",")) ",")
                                  status-lines))
@@ -97,7 +97,7 @@
            (names (-map 'vagrant-tramp--box-name boxes)))
       (if (eq 1 (length names))
           (car names)
-        (ido-completing-read "vagrant ssh to: " names)))))
+        (completing-read "vagrant ssh to: " names)))))
   (let* ((name (concat "vagrant terminal:" box-name))
          (buffer (get-buffer-create (concat "*" name "*"))))
     (unless (term-check-proc buffer)
