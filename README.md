@@ -1,4 +1,4 @@
-#Vagrant TRAMP
+# Vagrant TRAMP
 
 ## Synopsis
 
