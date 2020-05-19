@@ -2,8 +2,9 @@
 ### vagrant-tramp-ssh --- connect to the named vagrant box
 
 ## Copyright © 2016  The Vagrant-Tramp Contributors
+## Copyright © 2020  Ryan Prior <rprior@protonmail.com>
 
-## Author: Ryan Prior <ryanprior@gmail.com>
+## Author: Ryan Prior <rprior@protonmail.com>
 
 ## This file is not part of GNU Emacs.
 
@@ -23,23 +24,48 @@
 
 ### Commentary:
 
-## This script is intended for use as a TRAMP connection program when
-## establishing a connection to a Vagrant box. See vagrant-tramp.el
-## for more details.
+## This is a program for establishing a connection to a Vagrant box. Emacs TRAMP
+## will call it with a single argument containing a directory name and a box
+## name, separated by the ASCII unit separator (hex code 1F). It looks in
+## `vagrant global-status` to find the ID of that box and then uses `vagrant
+## ssh` to connect. See vagrant-tramp.el for more details.
 
-read -d "\n" dir_name name <<< $(echo "$1" | sed $'s/--/\\\n/')
+set -eu
+
+IFS=$'\x1f' read dir_name name <<<"$1"
+shift
 
 if [[ ! "$name" ]]; then name="default"; fi
 
-read id dir <<<\
-     $(vagrant global-status --machine-readable \
-           | awk -v n=1 '{if(NR>n) print a[NR%n]; a[NR%n]=$0}' \
-           | tail -n+8 \
-           | cut -d, -f5- \
-           | awk -v RS="" \
+vagrant_machines() {
+    vagrant global-status --machine-readable \
+        | cut -d, -f5- \
+        | awk '
+begin { go = 0 }
+
+$1 ~ /^-+$/ {
+  go = 1;
+  FS="\n";
+  RS="\n\n";
+  OFS="\x1f";
+  ORS="\n";
+}
+
+go && $1 ~ /^[0-9a-f]+ *$/ {
+  gsub(/ +$/, "", $1);
+  gsub(/ +$/, "", $2);
+  gsub(/ +$/, "", $5);
+  print $1, $2, $5
+}'
+}
+
+IFS=$'\x1f' read id dir <<<\
+     $(vagrant_machines \
+           | awk -v FS=$'\x1f' \
+                 -v OFS=$'\x1f' \
                  -v name="$name" \
                  -v dir="$dir_name" \
-                 "\$2==name && \$5~dir { print \$1; print \$5 }")
+                 '$2==name && $3~dir { print $1, $3 }')
 
 cd "$dir"
-vagrant ssh "$id"
+exec vagrant ssh "$id" $@
