@@ -56,26 +56,30 @@
   "List of VMs per `vagrant global-status` as alists."
   (let* ((status-cmd "vagrant global-status --machine-readable")
          (status-raw (shell-command-to-string status-cmd))
-         (status-lines (-drop 1 (seq-drop-while (lambda (elt) (not (string-match-p "^.*-----------------------------------------------------------------------------------$" elt)))
-                                                (split-string status-raw "\n"))))
-         (status-data-raw (--map (mapconcat 'identity
-                                            (-drop 4 (split-string it ",")) ",")
-                                 status-lines))
-         (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
+         (status-lines (split-string status-raw "\n"))
+         (status-col5
+          (-filter 'identity
+                   (--map (car (-drop 4 (split-string it ",")))
+                          status-lines)))
+         (status-data-raw
+          (-drop 1 (--drop-while
+                    (not (string-match-p (rx (1+ "-")) it))
+                    status-col5)))
+         (status-data (--map (replace-regexp-in-string " +$" "" it) status-data-raw))
          (status-groups (-butlast (-split-on "" status-data)))
-         (vm-attrs '(id name provider state dir)))
+         (vm-attrs '(:id :name :provider :state :dir)))
     (--map (-zip vm-attrs it) status-groups)))
 
 (defun vagrant-tramp--box-running-p (box)
   "True if BOX is reported as running."
-  (string= (cdr (assoc 'state box)) "running"))
+  (string= (cdr (assoc :state box)) "running"))
 
 (defun vagrant-tramp--box-name (box)
   "String representing BOX, using the Vagrantfile directory basename and the VM name (excluding 'default')."
-  (let ((name (cdr (assoc 'name box))))
-    (concat (file-name-base (cdr (assoc 'dir box)))
+  (let ((name (cdr (assoc :name box))))
+    (concat (file-name-base (cdr (assoc :dir box)))
             (unless (string= name "default")
-              (concat "--" name)))))
+              (concat "\x1f" name)))))
 
 (defun vagrant-tramp--running-boxes ()
   "List as per `vagrant-tramp--all-boxes', but excluding boxes not reported to be running."
@@ -107,9 +111,9 @@
                             box-name
                             (vagrant-tramp--box-name it))
                            boxes))
-             (box-id (cdr (assoc 'id box))))
+             (box-id (cdr (assoc :id box))))
         (with-current-buffer buffer
-          (cd (cdr (assoc 'dir box)))
+          (cd (cdr (assoc :dir box)))
           (term-mode))
         (term-exec buffer name "vagrant" nil (list "ssh" box-id))
         (set-buffer buffer)
