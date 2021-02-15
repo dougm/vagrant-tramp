@@ -131,7 +131,10 @@
   "Default list of (FUNCTION FILE) pairs to complete vagrant method.")
 
 ;;;###autoload
-(define-obsolete-function-alias 'vagrant-tramp-enable 'vagrant-tramp-add-method)
+(define-obsolete-function-alias
+  'vagrant-tramp-enable
+  'vagrant-tramp-add-method
+  "2015-10-17")
 
 ;;;###autoload
 (eval-after-load 'tramp
