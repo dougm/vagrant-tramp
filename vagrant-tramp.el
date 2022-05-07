@@ -88,16 +88,26 @@
          (-map 'vagrant-tramp--box-name
                (vagrant-tramp--running-boxes))))
 
+(defun vagrant-tramp--get-or-prompt-for-box-name ()
+  "Get box name if only one box is running, otherwise prompt the user to choose."
+  (let* ((boxes (vagrant-tramp--running-boxes))
+         (names (-map 'vagrant-tramp--box-name boxes)))
+    (if (eq 1 (length names))
+        (car names)
+      (completing-read "vagrant ssh to: " names))))
+
+;;;###autoload
+(defun vagrant-tramp-shell (box-name)
+  "SSH into BOX-NAME using a `shell'."
+  (interactive (list (vagrant-tramp--get-or-prompt-for-box-name)))
+  (let ((buffer-name (concat "*vagrant shell:" box-name "*"))
+        (default-directory (format "/vagrant:%s:" box-name)))
+    (shell buffer-name)))
+
 ;;;###autoload
 (defun vagrant-tramp-term (box-name)
   "SSH into BOX-NAME using an `ansi-term'."
-  (interactive
-   (list
-    (let* ((boxes (vagrant-tramp--running-boxes))
-           (names (-map 'vagrant-tramp--box-name boxes)))
-      (if (eq 1 (length names))
-          (car names)
-        (completing-read "vagrant ssh to: " names)))))
+  (interactive (list (vagrant-tramp--get-or-prompt-for-box-name)))
   (let* ((name (concat "vagrant terminal:" box-name))
          (buffer (get-buffer-create (concat "*" name "*"))))
     (unless (term-check-proc buffer)
