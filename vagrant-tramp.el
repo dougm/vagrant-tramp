@@ -56,12 +56,14 @@
   "List of VMs per `vagrant global-status` as alists."
   (let* ((status-cmd "vagrant global-status --machine-readable")
          (status-raw (shell-command-to-string status-cmd))
-         (status-lines (-drop 7 (split-string status-raw "\n")))
+         (status-lines (split-string status-raw "\n"))
+         (separator-position (cl-position "------" status-lines :test 'cl-search))
+         (status-lines-dropped (-drop-last 3 (-drop (1+ separator-position) status-lines)))
          (status-data-raw (--map (mapconcat 'identity
                                             (-drop 4 (split-string it ",")) ",")
-                                 status-lines))
+                                 status-lines-dropped))
          (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
-         (status-groups (-butlast (-split-on "" status-data)))
+         (status-groups (-split-on "" status-data))
          (vm-attrs '(id name provider state dir)))
     (--map (-zip vm-attrs it) status-groups)))
 

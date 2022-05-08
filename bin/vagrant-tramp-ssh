@@ -31,10 +31,9 @@ read -d "\n" dir_name name <<< $(echo "$1" | sed $'s/--/\\\n/')
 
 if [[ ! "$name" ]]; then name="default"; fi
 
-read id dir <<<\
+read -d "\n" id dir <<<\
      $(vagrant global-status --machine-readable \
-           | awk -v n=1 '{if(NR>n) print a[NR%n]; a[NR%n]=$0}' \
-           | tail -n+8 \
+           | sed -e "1,/------/d" -e '$ d' \
            | cut -d, -f5- \
            | awk -v RS="" \
                  -v name="$name" \
